@@ -29,7 +29,7 @@ jobs:
       # Build Expo Go for iOS Simulator
       - name: Build Expo Go (iOS Simulator)
         run: |
-          cd expo/apps/expo-go/ios
+          cd expo/packages/expo-go/ios
           xcodebuild \
             -workspace "Expo Go.xcworkspace" \
             -scheme "Expo Go" \
@@ -40,7 +40,7 @@ jobs:
       # Package IPA
       - name: Package IPA
         run: |
-          cd expo/apps/expo-go/ios/build/Build/Products/Release-iphonesimulator
+          cd expo/packages/expo-go/ios/build/Build/Products/Release-iphonesimulator
           mkdir Payload
           cp -R "Expo Go.app" Payload/
           zip -r ExpoGo.ipa Payload
