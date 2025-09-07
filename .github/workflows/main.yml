@@ -10,6 +10,12 @@ jobs:
       # Checkout repository
       - uses: actions/checkout@v3
 
+      # Setup Node.js 18
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
       # Clone Expo repo (SDK 50)
       - name: Clone Expo repo (SDK 50)
         run: git clone --depth 1 --branch sdk-50 https://github.com/expo/expo.git
