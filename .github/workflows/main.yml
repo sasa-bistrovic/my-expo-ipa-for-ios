@@ -1,4 +1,4 @@
-name: Build Expo Go IPA (SDK 50)
+name: Build Expo App (SDK 50)
 
 on:
   workflow_dispatch:
@@ -16,23 +16,21 @@ jobs:
         with:
           node-version: 18
 
-      # Clone Expo repo (SDK 50)
-      - name: Clone Expo repo (SDK 50)
-        run: git clone --depth 1 --branch sdk-50 https://github.com/expo/expo.git
-
       # Install dependencies
       - name: Install dependencies
-        run: |
-          cd expo
-          yarn
+        run: yarn install
 
-      # Build Expo Go for iOS Simulator
-      - name: Build Expo Go (iOS Simulator)
+      # Prebuild iOS
+      - name: Prebuild iOS
+        run: npx expo prebuild --platform ios
+
+      # Build using Xcode for simulator
+      - name: Build iOS Simulator
         run: |
-          cd expo/packages/expo-go/ios
+          cd ios
           xcodebuild \
-            -workspace "Expo Go.xcworkspace" \
-            -scheme "Expo Go" \
+            -workspace "${{ github.workspace }}/ios/MyApp.xcworkspace" \
+            -scheme "MyApp" \
             -sdk iphonesimulator \
             -configuration Release \
             -derivedDataPath build
@@ -40,17 +38,16 @@ jobs:
       # Package IPA
       - name: Package IPA
         run: |
-          cd expo/packages/expo-go/ios/build/Build/Products/Release-iphonesimulator
+          cd ios/build/Build/Products/Release-iphonesimulator
           mkdir Payload
-          cp -R "Expo Go.app" Payload/
-          zip -r ExpoGo.ipa Payload
-
+          cp -R "MyApp.app" Payload/
+          zip -r MyApp.ipa Payload
           mkdir -p $GITHUB_WORKSPACE/output
-          mv ExpoGo.ipa $GITHUB_WORKSPACE/output/
+          mv MyApp.ipa $GITHUB_WORKSPACE/output/
 
-      # Upload artifact (.ipa) using v4
-      - name: Upload artifact (.ipa)
+      # Upload artifact
+      - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
-          name: ExpoGo-ipa
-          path: output/ExpoGo.ipa
+          name: MyApp-ipa
+          path: output/MyApp.ipa
