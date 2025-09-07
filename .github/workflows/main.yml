@@ -1,0 +1,44 @@
+name: Build Expo Go IPA (SDK 50)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Clone Expo repo (SDK 50)
+        run: git clone --depth 1 --branch sdk-50 https://github.com/expo/expo.git
+
+      - name: Install dependencies
+        run: |
+          cd expo
+          yarn
+
+      - name: Build Expo Go (iOS Simulator)
+        run: |
+          cd expo/apps/expo-go/ios
+          xcodebuild \
+            -workspace "Expo Go.xcworkspace" \
+            -scheme "Expo Go" \
+            -sdk iphonesimulator \
+            -configuration Release \
+            -derivedDataPath build
+
+      - name: Package IPA
+        run: |
+          cd expo/apps/expo-go/ios/build/Build/Products/Release-iphonesimulator
+          mkdir Payload
+          cp -R "Expo Go.app" Payload/
+          zip -r ExpoGo.ipa Payload
+
+          mkdir -p $GITHUB_WORKSPACE/output
+          mv ExpoGo.ipa $GITHUB_WORKSPACE/output/
+
+      - name: Upload artifact (.ipa)
+        uses: actions/upload-artifact@v3
+        with:
+          name: ExpoGo-ipa
+          path: output/ExpoGo.ipa
