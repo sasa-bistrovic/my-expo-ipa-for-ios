@@ -29,8 +29,8 @@ jobs:
         run: |
           cd ios
           xcodebuild \
-            -workspace "${{ github.workspace }}/ios/MyApp.xcworkspace" \
-            -scheme "MyApp" \
+            -workspace "${{ github.workspace }}/ios/MyExpoAppSDK50.xcworkspace" \
+            -scheme "MyExpoAppSDK50" \
             -sdk iphonesimulator \
             -configuration Release \
             -derivedDataPath build
@@ -40,14 +40,14 @@ jobs:
         run: |
           cd ios/build/Build/Products/Release-iphonesimulator
           mkdir Payload
-          cp -R "MyApp.app" Payload/
-          zip -r MyApp.ipa Payload
+          cp -R "MyExpoAppSDK50.app" Payload/
+          zip -r MyExpoAppSDK50.ipa Payload
           mkdir -p $GITHUB_WORKSPACE/output
-          mv MyApp.ipa $GITHUB_WORKSPACE/output/
+          mv MyExpoAppSDK50.ipa $GITHUB_WORKSPACE/output/
 
       # Upload artifact
       - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
-          name: MyApp-ipa
-          path: output/MyApp.ipa
+          name: MyExpoAppSDK50-ipa
+          path: output/MyExpoAppSDK50.ipa
