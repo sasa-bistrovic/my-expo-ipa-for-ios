@@ -1,0 +1,15 @@
+{
+  "expo": {
+    "name": "MyExpoAppSDK50",
+    "slug": "myexpoappsdk50",
+    "version": "1.0.0",
+    "sdkVersion": "50.0.0",
+    "platforms": ["ios", "android", "web"],
+    "android": {
+      "package": "com.sasabistrovic.myexpoappsdk50"
+    },
+    "ios": {
+      "bundleIdentifier": "com.sasabistrovic.myexpoappsdk50"
+    }
+  }
+}
