@@ -7,16 +7,20 @@ jobs:
   build-ios:
     runs-on: macos-latest
     steps:
+      # Checkout repository
       - uses: actions/checkout@v3
 
+      # Clone Expo repo (SDK 50)
       - name: Clone Expo repo (SDK 50)
         run: git clone --depth 1 --branch sdk-50 https://github.com/expo/expo.git
 
+      # Install dependencies
       - name: Install dependencies
         run: |
           cd expo
           yarn
 
+      # Build Expo Go for iOS Simulator
       - name: Build Expo Go (iOS Simulator)
         run: |
           cd expo/apps/expo-go/ios
@@ -27,6 +31,7 @@ jobs:
             -configuration Release \
             -derivedDataPath build
 
+      # Package IPA
       - name: Package IPA
         run: |
           cd expo/apps/expo-go/ios/build/Build/Products/Release-iphonesimulator
@@ -37,8 +42,9 @@ jobs:
           mkdir -p $GITHUB_WORKSPACE/output
           mv ExpoGo.ipa $GITHUB_WORKSPACE/output/
 
+      # Upload artifact (.ipa) using v4
       - name: Upload artifact (.ipa)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ExpoGo-ipa
           path: output/ExpoGo.ipa
